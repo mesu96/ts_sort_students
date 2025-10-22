@@ -22,31 +22,45 @@ export function sortStudents(
   sortBy: SortType,
   order: SortOrder,
 ): Student[] {
-  const studentsCopy = [...students];
+  const studentsCopy: Student[] = [...students];
 
   const avg = (grades: number[]):
-  number => grades.reduce((sum, g) => sum + g, 0) / grades.length;
+  number => grades.reduce((s, g) => s + g, 0) / grades.length;
 
-  return studentsCopy.sort((a, b) => {
-    let valueA: string | number | boolean;
-    let valueB: string | number | boolean;
+  return studentsCopy.sort((a: Student, b: Student) => {
+    let valueA: string | number;
+    let valueB: string | number;
 
-    if (sortBy === SortType.Name || sortBy === SortType.Surname) {
-      const key = sortBy === SortType.Name ? 'name' : 'surname';
+    switch (sortBy) {
+      case SortType.Name:
 
-      valueA = a[key].toLowerCase();
-      valueB = b[key].toLowerCase();
-    } else if (sortBy === SortType.Age) {
-      valueA = a.age;
-      valueB = b.age;
-    } else if (sortBy === SortType.Married) {
-      valueA = a.married ? 1 : 0;
-      valueB = b.married ? 1 : 0;
-    } else if (sortBy === SortType.AverageGrade) {
-      valueA = avg(a.grades);
-      valueB = avg(b.grades);
-    } else {
-      return 0;
+      // eslint-disable-next-line no-fallthrough
+      case SortType.Surname: {
+        const key: 'name' | 'surname'
+          = sortBy === SortType.Name ? 'name' : 'surname';
+
+        valueA = a[key].toLowerCase();
+        valueB = b[key].toLowerCase();
+        break;
+      }
+
+      case SortType.Age:
+        valueA = a.age;
+        valueB = b.age;
+        break;
+
+      case SortType.Married:
+        valueA = Number(a.married);
+        valueB = Number(b.married);
+        break;
+
+      case SortType.AverageGrade:
+        valueA = avg(a.grades);
+        valueB = avg(b.grades);
+        break;
+
+      default:
+        return 0;
     }
 
     if (valueA < valueB) {
