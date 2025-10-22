@@ -31,29 +31,22 @@ export function sortStudents(
     let valueA: string | number | boolean;
     let valueB: string | number | boolean;
 
-    switch (sortBy) {
-      case SortType.Name:
-        valueA = a.name.toLowerCase();
-        valueB = b.name.toLowerCase();
-        break;
-      case SortType.Surname:
-        valueA = a.surname.toLowerCase();
-        valueB = b.surname.toLowerCase();
-        break;
-      case SortType.Age:
-        valueA = a.age;
-        valueB = b.age;
-        break;
-      case SortType.Married:
-        valueA = a.married ? 1 : 0;
-        valueB = b.married ? 1 : 0;
-        break;
-      case SortType.AverageGrade:
-        valueA = avg(a.grades);
-        valueB = avg(b.grades);
-        break;
-      default:
-        return 0;
+    if (sortBy === SortType.Name || sortBy === SortType.Surname) {
+      const key = sortBy === SortType.Name ? 'name' : 'surname';
+
+      valueA = a[key].toLowerCase();
+      valueB = b[key].toLowerCase();
+    } else if (sortBy === SortType.Age) {
+      valueA = a.age;
+      valueB = b.age;
+    } else if (sortBy === SortType.Married) {
+      valueA = a.married ? 1 : 0;
+      valueB = b.married ? 1 : 0;
+    } else if (sortBy === SortType.AverageGrade) {
+      valueA = avg(a.grades);
+      valueB = avg(b.grades);
+    } else {
+      return 0;
     }
 
     if (valueA < valueB) {
